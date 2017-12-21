@@ -5,7 +5,27 @@ export default {
   name: 'VueNumeric',
 
   render (h) {
-    if(!this.readOnly)
+    if(this.$scopedSlots.default) {
+      const vNode = this.$scopedSlots.default(
+        {
+          listeners: {
+            focus: this.onFocusHandler,
+            blur: this.onBlurHandler,
+            input: (value) => {
+              this.onInputHandler(value)
+              this.updateValue(value)
+            }
+          },
+          props: {
+            value: this.amount,
+            placeholder: this.placeholder
+          },
+          ref: 'numeric'
+        }
+      )[0]
+      return vNode
+    }
+    else if(!this.readOnly)
       return h(
         'input',
         {
@@ -200,7 +220,7 @@ export default {
      * @param {Number} newValue
      */
     valueNumber (newValue) {
-      if (this.$refs.numeric !== document.activeElement) {
+      if (this.$el !== document.activeElement) {
         this.amount = this.format(newValue)
       }
     },

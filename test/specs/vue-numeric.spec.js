@@ -251,4 +251,23 @@ describe('vue-numeric.vue', () => {
     wrapper.setProps({ precision: 1 })
     expect(wrapper.data().amount).to.equal('2,000.2')
   })
+
+  it('renders custom input', (done) => {
+    const el = document.createElement('div')
+    const vm = new Vue({
+      el,
+      data: () => ({ total: 3000 }),
+      template: '<div><vue-numeric v-model="total" :min="-150" separator="," :minus="false">\
+        <template slot-scope="props">\
+          <input type="tel" v-on="props.listeners" v-bind="props.props" />\
+        </template>\
+      </vue-numeric></div>',
+      components: { VueNumeric }
+    }).$mount()
+
+    setTimeout(() => {
+      expect(vm.$el.firstChild.value.trim()).to.equal('3,000')
+      done()
+    })
+  })
 })
