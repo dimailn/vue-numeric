@@ -1,25 +1,35 @@
-<template>
-  <input
-    :placeholder="placeholder"
-    @blur="onBlurHandler"
-    @input="onInputHandler"
-    @focus="onFocusHandler"
-    ref="numeric"
-    type="tel"
-    v-model="amount"
-    v-if="!readOnly"
-  >
-  <span
-    v-else
-    ref="readOnly"
-  >{{ amount }}</span>
-</template>
-
 <script>
 import accounting from 'accounting-js'
 
 export default {
   name: 'VueNumeric',
+
+  render (h) {
+    if(!this.readOnly)
+      return h(
+        'input',
+        {
+          on: {
+            focus: this.onFocusHandler,
+            blur: this.onBlurHandler,
+            input: (value) => {
+              this.onInputHandler(value)
+              this.updateValue(value)
+            },
+          },
+          ref: 'numeric',
+          domProps: {
+            value: this.amount,
+            placeholder: this.placeholder
+          },
+          attrs: {
+            type: 'tel'
+          }
+        }
+      )
+    else
+      return h('span', { ref: 'readOnly' }, this.amount)
+  },
 
   props: {
     /**
@@ -328,6 +338,10 @@ export default {
     unformat (value) {
       const toUnformat = typeof value === 'string' && value === '' ? this.emptyValue : value
       return accounting.unformat(toUnformat, this.decimalSeparator)
+    },
+
+    updateValue (value) {
+      this.amount = value
     }
   }
 }
