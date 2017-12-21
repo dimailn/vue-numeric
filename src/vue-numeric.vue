@@ -19,8 +19,7 @@ export default {
           props: {
             value: this.amount,
             placeholder: this.placeholder
-          },
-          ref: 'numeric'
+          }
         }
       )[0]
       return vNode
