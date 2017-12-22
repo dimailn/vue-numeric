@@ -79,6 +79,25 @@ export default {
     },
 
     /**
+     * Forced thousand separator.
+     * Accepts any string.
+     */
+    thousandSeparator: {
+      default: undefined,
+      required: false,
+      type: String
+    },
+
+    /**
+     * Forced decimal separator.
+     * Accepts any string.
+     */
+    decimalSeparator: {
+      default: undefined,
+      required: false,
+      type: String
+    },
+    /**
      * v-model value.
      */
     value: {
@@ -137,11 +156,8 @@ export default {
       return this.unformat(this.value)
     },
 
-    /**
-     * Define decimal separator based on separator props.
-     * @return {String} '.' or ','
-     */
-    decimalSeparator () {
+    $decimalSeparator () {
+      if (typeof this.decimalSeparator !== 'undefined') return this.decimalSeparator
       if (this.separator === ',') return '.'
       return ','
     },
@@ -150,7 +166,8 @@ export default {
      * Define thousand separator based on separator props.
      * @return {String} '.' or ','
      */
-    thousandSeparator () {
+    $thousandSeparator () {
+      if (typeof this.thousandSeparator !== 'undefined') return this.thousandSeparator
       if (this.separator === '.') return '.'
       if (this.separator === 'space') return ' '
       return ','
@@ -255,7 +272,7 @@ export default {
           symbol: '',
           format: '%v',
           thousand: '',
-          decimal: this.decimalSeparator,
+          decimal: this.$decimalSeparator,
           precision: Number(this.precision)
         })
       }
@@ -297,8 +314,8 @@ export default {
         symbol: this.currency,
         format: this.symbolPosition,
         precision: Number(this.precision),
-        decimal: this.decimalSeparator,
-        thousand: this.thousandSeparator
+        decimal: this.$decimalSeparator,
+        thousand: this.$thousandSeparator
       })
     },
 
@@ -309,7 +326,7 @@ export default {
      */
     unformat (value) {
       const toUnformat = typeof value === 'string' && value === '' ? this.emptyValue : value
-      return accounting.unformat(toUnformat, this.decimalSeparator)
+      return accounting.unformat(toUnformat, this.$decimalSeparator)
     }
   }
 }
