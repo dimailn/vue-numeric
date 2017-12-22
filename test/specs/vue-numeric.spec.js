@@ -259,7 +259,7 @@ describe('vue-numeric.vue', () => {
       data: () => ({ total: 3000 }),
       template: '<div><vue-numeric v-model="total" :min="-150" separator="," :minus="false">\
         <template slot-scope="props">\
-          <input type="tel" v-on="props.listeners" v-bind="props.props" />\
+          <input class="tested" type="tel" v-on="props.listeners" v-bind="props.props" />\
         </template>\
       </vue-numeric></div>',
       components: { VueNumeric }
@@ -267,6 +267,7 @@ describe('vue-numeric.vue', () => {
 
     setTimeout(() => {
       expect(vm.$el.firstChild.value.trim()).to.equal('3,000')
+      expect(vm.$el.firstChild.className).to.equal('tested')
       done()
     })
   })
