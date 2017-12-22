@@ -1,4 +1,5 @@
 import component from './vue-numeric.vue'
+import Base from './base.js'
 
 const plugin = {
   install: Vue => {
@@ -9,3 +10,5 @@ const plugin = {
 component.install = plugin.install
 
 export default component
+
+export {Base}
